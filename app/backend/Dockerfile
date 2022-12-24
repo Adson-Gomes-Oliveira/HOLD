@@ -1,5 +1,5 @@
 FROM node:16.4-alpine
-WORKDIR /app
+WORKDIR /app-backend
 EXPOSE 3031
 COPY package*.json ./
 RUN npm install
