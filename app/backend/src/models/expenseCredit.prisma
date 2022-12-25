@@ -1,0 +1,31 @@
+model ExpenseCredit {
+  id Int @id @default(autoincrement())
+  user_id Int
+  category_id Int
+  wallet_id Int
+  value Int
+  type String
+  transactDate DateTime @map("transact_date")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user User @relation(fields: [user_id], references: [id])
+  category Category @relation(fields: [category_id], references: [id])
+  wallet Wallet @relation(fields: [wallet_id], references: [id])
+
+  @@map("expense_credit")
+}
+
+model User {
+  id Int @id
+  expensesCredit ExpenseCredit[]
+}
+
+model Category {
+  id Int @id
+  expensesCredit ExpenseCredit[]
+}
+
+model Wallet {
+  id Int @id
+  expensesCredit ExpenseCredit[]
+}
