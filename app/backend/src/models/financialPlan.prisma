@@ -1,5 +1,6 @@
 model FinancialPlan {
   id Int @id @default(autoincrement())
+  userId Int @map("user_id")
   goal Int
   income Int
   expense Int
@@ -8,7 +9,6 @@ model FinancialPlan {
   active Boolean
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  userId Int @map("user_id")
   user User @relation(fields: [userId], references: [id])
 
   @@map("financial_plan")
