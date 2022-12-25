@@ -24,6 +24,7 @@ model User {
   wallets          Wallet?         @relation(name: "UserToWallet")
   expenseIncomes   ExpenseIncome[] @relation(name: "ExpenseIncomeToUser")
   cards            Card[]          @relation(name: "CardToUser")
+  expensesCredit   ExpenseCredit[] @relation(name: "ExpenseCreditToUser")
 
   @@map("user")
 }
@@ -57,6 +58,7 @@ model Wallet {
   user           User?           @relation(name: "UserToWallet", fields: [userId], references: [id])
   financialPlan  FinancialPlan?  @relation(name: "FinancialPlanToWallet", fields: [finPlanId], references: [id])
   expenseIncomes ExpenseIncome[] @relation(name: "ExpenseIncomeToWallet")
+  expensesCredit ExpenseCredit[] @relation(name: "ExpenseCreditToWallet")
 
   @@map("wallet")
 }
@@ -65,6 +67,7 @@ model Category {
   id             Int             @id @default(autoincrement())
   name           String
   expenseIncomes ExpenseIncome[] @relation(name: "CategoryToExpenseIncome")
+  expensesCredit ExpenseCredit[] @relation(name: "CategoryToExpenseCredit")
 
   @@map("category")
 }
@@ -108,4 +111,21 @@ model Card {
   cardBrand  CardBrand @relation(name: "CardToCardBrand", fields: [brandId], references: [id])
 
   @@map("card")
+}
+
+model ExpenseCredit {
+  id           Int      @id @default(autoincrement())
+  user_id      Int
+  category_id  Int
+  wallet_id    Int
+  value        Int
+  type         String
+  transactDate DateTime @map("transact_date")
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  user         User     @relation(name: "ExpenseCreditToUser", fields: [user_id], references: [id])
+  category     Category @relation(name: "CategoryToExpenseCredit", fields: [category_id], references: [id])
+  wallet       Wallet   @relation(name: "ExpenseCreditToWallet", fields: [wallet_id], references: [id])
+
+  @@map("expense_credit")
 }
