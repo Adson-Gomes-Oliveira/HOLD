@@ -1,0 +1,17 @@
+{
+  "mixers": [
+    {
+        "input": [
+            "./prisma/base.prisma",
+            "./src/models/financialPlan.prisma", 
+            "./src/models/wallet.prisma",
+            "./src/models/category.prisma",
+            "./src/models/expenseIncome.prisma",
+            "./src/models/cardBrand.prisma",
+            "./src/models/card.prisma",
+            "./src/models/expenseCredit.prisma"
+        ],
+        "output": "prisma/schema.prisma"
+    }
+  ]
+}
