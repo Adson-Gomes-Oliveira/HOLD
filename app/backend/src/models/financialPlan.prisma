@@ -1,0 +1,20 @@
+model FinancialPlan {
+  id Int @id @default(autoincrement())
+  goal Int
+  income Int
+  expense Int
+  categoriesBudget Json @map("categories_budget")
+  mainPlan Boolean @map("main_plan")
+  active Boolean
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  userId Int @map("user_id")
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("financial_plan")
+}
+
+model User {
+  id Int @id
+  financialPlans FinancialPlan[]
+}
