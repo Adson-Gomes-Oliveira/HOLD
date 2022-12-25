@@ -1,0 +1,24 @@
+model Wallet {
+  id Int @id @default(autoincrement())
+  userId Int @unique
+  finPlanId Int @unique
+  title String
+  value Int
+  bankWallet String? @map("bank_wallet")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user User? @relation(fields: [userId], references: [id])
+  financialPlan FinancialPlan? @relation(fields: [finPlanId], references: [id])
+
+  @@map("wallet")
+}
+
+model User {
+  id Int @id
+  wallets Wallet?
+}
+
+model FinancialPlan {
+  id Int @id
+  wallets Wallet?
+}
