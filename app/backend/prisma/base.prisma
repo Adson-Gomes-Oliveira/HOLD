@@ -9,13 +9,16 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
-  first_name String
-  last_name String
+  firstName String @map("first_name")
+  lastName String @map("last_name")
   email String @unique
   password String
-  profile_picture String
+  profilePicture String @map("profile_picture")
+  securityQuestion String @map("security_question")
   badges Json
   active Boolean
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  @@map("user")
 }
