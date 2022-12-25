@@ -11,6 +11,8 @@ model ExpenseIncome {
   user User @relation(fields: [user_id], references: [id])
   category Category @relation(fields: [category_id], references: [id])
   wallet Wallet @relation(fields: [wallet_id], references: [id])
+
+  @@map("expense_income")
 }
 
 model User {
