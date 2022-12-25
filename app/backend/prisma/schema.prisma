@@ -21,13 +21,16 @@ model User {
   created_at       DateTime        @default(now())
   updated_at       DateTime        @updatedAt
   financialPlans   FinancialPlan[] @relation(name: "FinancialPlanToUser")
-  wallet           Wallet?         @relation(name: "UserToWallet")
+  wallets          Wallet?         @relation(name: "UserToWallet")
+  expenseIncomes   ExpenseIncome[] @relation(name: "ExpenseIncomeToUser")
+  cards            Card[]          @relation(name: "CardToUser")
 
   @@map("user")
 }
 
 model FinancialPlan {
   id               Int      @id @default(autoincrement())
+  userId           Int      @map("user_id")
   goal             Int
   income           Int
   expense          Int
@@ -36,27 +39,73 @@ model FinancialPlan {
   active           Boolean
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt
-  userId           Int      @map("user_id")
   user             User     @relation(name: "FinancialPlanToUser", fields: [userId], references: [id])
-  wallet           Wallet?  @relation(name: "FinancialPlanToWallet")
+  wallets          Wallet?  @relation(name: "FinancialPlanToWallet")
 
   @@map("financial_plan")
 }
 
 model Wallet {
-  id            Int            @id @default(autoincrement())
-  title         String
-  value         Int
-  bankWallet    String?        @map("bank_wallet")
-  created_at    DateTime       @default(now())
-  updated_at    DateTime       @updatedAt
-  userId        Int            @unique
-  finPlanId     Int            @unique
-  user          User?          @relation(name: "UserToWallet", fields: [userId], references: [id])
-  financialPlan FinancialPlan? @relation(name: "FinancialPlanToWallet", fields: [finPlanId], references: [id])
+  id             Int             @id @default(autoincrement())
+  userId         Int             @unique
+  finPlanId      Int             @unique
+  title          String
+  value          Int
+  bankWallet     String?         @map("bank_wallet")
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+  user           User?           @relation(name: "UserToWallet", fields: [userId], references: [id])
+  financialPlan  FinancialPlan?  @relation(name: "FinancialPlanToWallet", fields: [finPlanId], references: [id])
+  expenseIncomes ExpenseIncome[] @relation(name: "ExpenseIncomeToWallet")
+
+  @@map("wallet")
 }
 
 model Category {
-  id   Int    @id @default(autoincrement())
-  name String
+  id             Int             @id @default(autoincrement())
+  name           String
+  expenseIncomes ExpenseIncome[] @relation(name: "CategoryToExpenseIncome")
+
+  @@map("category")
+}
+
+model ExpenseIncome {
+  id           Int      @id @default(autoincrement())
+  user_id      Int
+  category_id  Int
+  wallet_id    Int
+  value        Int
+  type         String
+  transactDate DateTime @map("transact_date")
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  user         User     @relation(name: "ExpenseIncomeToUser", fields: [user_id], references: [id])
+  category     Category @relation(name: "CategoryToExpenseIncome", fields: [category_id], references: [id])
+  wallet       Wallet   @relation(name: "ExpenseIncomeToWallet", fields: [wallet_id], references: [id])
+
+  @@map("expense_income")
+}
+
+model CardBrand {
+  id    Int    @id @default(autoincrement())
+  name  String
+  cards Card[] @relation(name: "CardToCardBrand")
+
+  @@map("card_brand")
+}
+
+model Card {
+  id         Int       @id @default(autoincrement())
+  brandId    Int
+  userId     Int
+  limit      Int
+  target     String
+  payDate    DateTime  @map("pay_date")
+  closeDate  DateTime  @map("close_date")
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  user       User      @relation(name: "CardToUser", fields: [userId], references: [id])
+  cardBrand  CardBrand @relation(name: "CardToCardBrand", fields: [brandId], references: [id])
+
+  @@map("card")
 }

@@ -15,10 +15,10 @@ model Wallet {
 
 model User {
   id Int @id
-  wallet Wallet?
+  wallets Wallet?
 }
 
 model FinancialPlan {
   id Int @id
-  wallet Wallet?
+  wallets Wallet?
 }

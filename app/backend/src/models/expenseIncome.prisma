@@ -17,15 +17,15 @@ model ExpenseIncome {
 
 model User {
   id Int @id
-  expenseIncome ExpenseIncome[]
+  expenseIncomes ExpenseIncome[]
 }
 
 model Category {
   id Int @id
-  expenseIncome ExpenseIncome[]
+  expenseIncomes ExpenseIncome[]
 }
 
 model Wallet {
   id Int @id
-  expenseIncome ExpenseIncome[]
+  expenseIncomes ExpenseIncome[]
 }
