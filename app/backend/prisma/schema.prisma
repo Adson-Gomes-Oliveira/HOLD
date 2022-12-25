@@ -21,6 +21,7 @@ model User {
   created_at       DateTime        @default(now())
   updated_at       DateTime        @updatedAt
   financialPlans   FinancialPlan[] @relation(name: "FinancialPlanToUser")
+  wallet           Wallet?         @relation(name: "UserToWallet")
 
   @@map("user")
 }
@@ -37,6 +38,20 @@ model FinancialPlan {
   updated_at       DateTime @updatedAt
   userId           Int      @map("user_id")
   user             User     @relation(name: "FinancialPlanToUser", fields: [userId], references: [id])
+  wallet           Wallet?  @relation(name: "FinancialPlanToWallet")
 
   @@map("financial_plan")
+}
+
+model Wallet {
+  id            Int            @id @default(autoincrement())
+  title         String
+  value         Int
+  bankWallet    String?        @map("bank_wallet")
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
+  userId        Int            @unique
+  finPlanId     Int            @unique
+  user          User?          @relation(name: "UserToWallet", fields: [userId], references: [id])
+  financialPlan FinancialPlan? @relation(name: "FinancialPlanToWallet", fields: [finPlanId], references: [id])
 }
