@@ -1,0 +1,787 @@
+openapi: 3.0.3
+info:
+  title: Financier - OpenAPI 3.0.3
+  description: >-
+    Essa é uma especificação da API utilizada pela aplicação Financier, nem todos os
+    endpoints estão disponíveis de forma pública. A Financier não armazena nenhum
+    dado pessoal sensível do usuário.
+  contact:
+    name: Desenvolvedor
+    email: adsongoliveira2022@outlook.com
+    url: https://devago.com.br
+  license:
+    name: GPLv3 License
+    url: https://www.gnu.org/licenses/gpl-3.0.html
+  version: 0.0.1
+externalDocs:
+  description: HOLD Controle Financeiro | Link de acesso ↗
+  url: https://hold.devago.com.br
+servers:
+  - url: localhost:3001
+    description: Localhost for development
+paths:
+  /user:
+    post:
+      summary: Cadastra um novo usuário
+      tags:
+        - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPost'
+      responses:
+        '201':
+          description: Created Successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  full_name:
+                    type: string
+                  email:
+                    type: string
+                  password:
+                    type: string
+                  profile_picture:
+                    type: string
+                  security_question:
+                    type: string
+                  active:
+                    type: boolean
+                  created_at:
+                    type: string
+                    format: date-time
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unauthorized'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unprocessable'
+  /user/{id}:
+    get:
+      summary: Recupera informações sobre um usuário
+      tags:
+        - user
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+      security:
+        - auth: []
+    put:
+      summary: Edita informações do usuário
+      tags:
+        - user
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPost'
+      responses:
+        '201':
+          description: Successfully Edited
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  full_name:
+                    type: string
+                  email:
+                    type: string
+                  password:
+                    type: string
+                  profile_picture:
+                    type: string
+                  security_question:
+                    type: string
+                  active:
+                    type: boolean
+                  updated_at:
+                    type: string
+                    format: date-time
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+      security:
+        - auth: []
+    delete:
+      summary: Deletar um usuário
+      tags:
+        - user
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '204':
+          description: Successfully Deleted
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+      security:
+        - auth: []
+  /card:
+    get:
+      summary: Recuperar lista de cartões do usuário
+      tags:
+        - card
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    user_id:
+                      type: integer
+                    flag:
+                      type: string
+                    bank:
+                      type: string
+                    limit:
+                      type: integer
+                    target:
+                      type: string
+                    close_date:
+                      type: string
+                      format: date
+                    final_date:
+                      type: string
+                      format: date
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+      security:
+        - auth: []
+    post:
+      summary: Adiciona um cartão a carteira do usuário
+      tags:
+        - card
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardPost'
+      responses:
+        '201':
+          description: Successfully Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  flag:
+                    type: string
+                  bank:
+                    type: string
+                  limit:
+                    type: integer
+                  target:
+                    type: string
+                  close_date:
+                    type: string
+                    format: date
+                  final_date:
+                    type: string
+                    format: date
+                  created_at:
+                    type: string
+                    format: date-time
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unauthorized'
+      security:
+        - auth: []
+  /card/{id}:
+    get:
+      summary: Recupera informações sobre o cartão de um usuário
+      tags:
+        - card
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+      security:
+        - auth: []
+    put:
+      summary: Edita um cartão da carteira do usuário
+      tags:
+        - card
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardPost'
+      responses:
+        '201':
+          description: Successfully Edited
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  flag:
+                    type: string
+                  bank:
+                    type: string
+                  limit:
+                    type: integer
+                  target:
+                    type: string
+                  close_date:
+                    type: string
+                    format: date
+                  final_date:
+                    type: string
+                    format: date
+                  updated_at:
+                    type: string
+                    format: date-time
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+      security:
+        - auth: []
+    delete:
+      summary: Deletar um cartão
+      tags:
+        - card
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '203':
+          description: Successfully Deleted
+          content:
+            application/json:
+              example: Card {id} deleted with success
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+      security:
+        - auth: []
+  /wallet:
+    get:
+      summary: Recupera uma lista de carteiras do usuário
+      tags:
+        - wallet
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    user_id:
+                      type: integer
+                    title:
+                      type: string
+                    money:
+                      type: number
+                    bankWallet:
+                      type: string
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+      security:
+        - auth: []
+    post:
+      summary: Cria uma nova carteira para o usuário
+      tags:
+        - wallet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WalletPost'
+      responses:
+        '201':
+          description: Successfully Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  title:
+                    type: string
+                  money:
+                    type: number
+                  bankWallet:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unauthorized'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unprocessable'
+      security:
+        - auth: []
+  /wallet/{id}:
+    get:
+      summary: Recupera detalhes da carteira do usuário
+      tags:
+        - wallet
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wallet'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+      security:
+        - auth: []
+    put:
+      summary: Edita uma carteira do usuário
+      tags:
+        - wallet
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WalletPost'
+      responses:
+        '201':
+          description: Successfully Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  title:
+                    type: string
+                  money:
+                    type: number
+                  bankWallet:
+                    type: string
+                  updated_at:
+                    type: string
+                    format: date-time
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+      security:
+        - auth: []
+    delete:
+      summary: Deletar a carteira de um usuário
+      tags:
+        - wallet
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '203':
+          description: Successfully Deleted
+          content:
+            application/json:
+              example: Card {id} deleted with success
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+      security:
+        - auth: []
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        full_name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        profile_picture:
+          type: string
+        security_question:
+          type: string
+        active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    UserPost:
+      type: object
+      properties:
+        fullName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        profile_picture:
+          type: string
+        security_question:
+          type: string
+          example: This is an example? | Yes sir
+        active:
+          type: integer
+          example: 1
+    Card:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        flag:
+          type: string
+        bank:
+          type: string
+        limit:
+          type: integer
+        target:
+          type: string
+        close_date:
+          type: string
+          format: date
+        final_date:
+          type: string
+          format: date
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    CardPost:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        flag:
+          type: string
+        bank:
+          type: string
+        limit:
+          type: integer
+        target:
+          type: string
+        close_date:
+          type: string
+          format: date
+        final_date:
+          type: string
+          format: date
+    Wallet:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        title:
+          type: string
+        money:
+          type: number
+        bankWallet:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    WalletPost:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        title:
+          type: string
+        money:
+          type: number
+        bankWallet:
+          type: string
+  responses:
+    BadRequest:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Bad data provided
+        code:
+          type: integer
+          example: 400
+    Unauthorized:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Unauthorized request or Token invalid
+        code:
+          type: integer
+          example: 401
+    NotFound:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Entity not found
+        code:
+          type: integer
+          example: 404
+    Unprocessable:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Entity already registered
+        code:
+          type: integer
+          example: 422
+  parameters:
+    IDParam:
+      name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+  securitySchemes:
+    auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

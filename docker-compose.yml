@@ -1,8 +1,8 @@
 version: "3.9"
 services:
-  frontend:
-    container_name: "HOLD-FRONTEND"
-    build: app/frontend/
+  # frontend:
+  #   container_name: "HOLD-FRONTEND"
+  #   build: app/frontend/
   backend:
     container_name: "HOLD-BACKEND"
     build: app/backend/
@@ -38,3 +38,27 @@ services:
       retries: 5
     cap_add:
       - SYS_NICE
+  swagger-editor:
+    image: swaggerapi/swagger-editor
+    ports:
+      - 81:8080
+    environment:
+      - SWAGGER_FILE=/tmp/openapi.yaml
+    healthcheck:
+      test: ["CMD", "lsof", "-t", "-i:80"]
+      timeout: 10s
+      retries: 5
+    volumes:
+      - ./app/backend:/tmp
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    ports:
+      - 80:8080
+    environment:
+      - SWAGGER_JSON=/tmp/openapi.json
+    healthcheck:
+      test: ["CMD", "lsof", "-t", "-i:80"]
+      timeout: 10s
+      retries: 5
+    volumes:
+      - ./app/backend:/tmp
